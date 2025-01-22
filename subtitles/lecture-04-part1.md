@@ -1,392 +1,364 @@
-Intro
-hello and welcome to the fourth lecture
-of cs285
-in uh today's lecture we're going to go
-over
-a comprehensive introduction to
-reinforce some learning algorithms
-definitions and basic concepts so let's
-start with some definitions
-Terminology & notation
-first let's go over some of the
+# Intro
+
+Hello and welcome to the fourth lecture
+of cs285. In today's lecture we're going to go
+over a comprehensive introduction to
+reinforce learning algorithms
+definitions and basic concepts. So let's
+start with some definitions.  
+
+# Terminology & notation
+
+First let's go over some of the
 terminology that we covered in the
-previous lecture
-when we talked about imitation learning
-we learned that we can represent a
-policy
-as a distribution over actions a t
-condition on observations ot
-we call this policy pi and we often use
-a subscript theta
-to know the policy depends on a vector
+previous lecture. When we talked about imitation learning,
+we learned that we can represent a policy
+as a distribution over actions $a_t$
+condition on observations $o_t$,
+we call this policy $\pi$ and we often use
+a subscript $\theta$
+to note that the policy depends on a vector
 of parameters that we're going to denote
-theta
-when we're doing deep reinforcement
-learning oftentimes we'll represent the
+$\theta$. When we're doing deep reinforcement
+learning, oftentimes we'll represent the
 policy
 with a deep neural network although as
 we will learn in the
 next few lectures in the course
 depending on the type of reinforcement
-learning algorithm we might choose to
+learning algorithm, we might choose to
 represent
 the policy directly or implicitly
 through some other object such as a
-value function
-important definitions to know are the
-state which we denote st
-the observation ot and the action a t
-as we learned in the imitation learning
-lecture the observation and state can be
-related to one another
-by the following graphical model where
-the edge between observations and
-actions
-is the policy the edge between current
-states and actions and future states
-is the transition probability or the
-dynamics
-and the state satisfies the markov
-property which means
-that the state at time t plus 1 is
-independent
-of the state at time t minus 1 when
-condition on the current state st
-the markov property is the main thing
-that distinguishes the state from the
-observation
-the state has to satisfy the markov
-property whereas the observation does
-not
-and we learn in the imitation learning
-lecture that the
-observation is some stochastic function
-of the state which may or may not
-contain all the information
-necessary to infer the full state so
-that's kind of the primary difference
-we will discuss algorithms for both
-fully observed
-reinforcement learning where we have
-access to the state and partially
-observed reinforcement learning
-where you only have access to an
-observation
-all right so that's the markov property
-and typically you'll see me write the
-policy as
-pi theta a t given o t or pi theta a t
-given st
-depending on whether i'm talking about
+value function.
+Important definitions to know are the
+state which we denote $s_t$,
+the observation $o_t$ and the action $a_t$.  
+
+As we learned in the imitation learning lecture,
+the observation and state can be related to one another
+by the following graphical model, where the edge between
+observations and actions is the policy, the edge between
+current states and actions and future states is the transition
+probability or the dynamics, and the state satisfies
+the Markov property. This means that the state at time $t + 1$
+is independent of the state at time $t - 1$
+when conditioned on the current state $s_t$.  
+
+The Markov property is the main thing that
+distinguishes the state from the observation.
+The state has to satisfy the Markov property,
+whereas the observation does not.
+As we learned in the imitation learning lecture,
+the observation is some stochastic function of the state,
+which may or may not contain all the information necessary
+to infer the full state. So, that’s kind of the primary difference.
+
+We will discuss algorithms for both
+fully observed reinforcement learning
+(where we have access to the state)
+and partially observed reinforcement learning
+(where you only have access to an observation).
+
+All right so that's the Markov property.
+Typically you'll see me write the
+policy as $\pi_\theta(a_t|o_t)$
+ or $\pi_\theta(a_t|s_t)$
+depending on whether I'm talking about
 the partially observed or the fully
-observed case
-i will sometimes get a little sloppy and
-use st
-when in fact you could also use ot but
+observed case.
+I will sometimes get a little sloppy and
+use $s_t$
+when in fact, you could also use $o_t$. But
 in cases where this
-distinction is important i'll make a
-remark in the lectures
-Imitation Learning
-so in imitation learning we saw that we
-could collect a data set
-let's say of humans driving a vehicle
-consisting of observation action tuples
-and then use supervised learning
-algorithms to figure out
-how to train a policy to take actions
-that resemble those of the expert
-in today's lecture we'll introduce the
-formalism of reinforcement learning
+distinction is important,  I'll make a
+remark in the lectures.  
+
+# Imitation Learning
+
+In imitation learning, we saw that we
+could collect a dataset (let's say of
+humans driving a vehicle) consisting of
+observation-action tuples and then use supervised
+learning algorithms to figure out how to train a
+policy to take actions that resemble those of the expert.
+
+In today’s lecture, we’ll introduce
+the formalism of reinforcement learning,
 which allows us to train these policies
-without having
-access to expert data
-Reward functions
-so to do that of course we need to
-define what it is that we want the
-policy to do
-and we define the objective by means of
-something called a reward function
-so we could say well which action is
-better or worse if you're driving this
-car if you don't have any data
-how can you say what is a good action
-what is a bad action
-so the reward function essentially tells
-you that the reward function is a scalar
-valued function
-of the state and the action although
-sometimes it can depend on only the
-state most generally it can depend on
-both the state and the action
-and it tells us which states and actions
-are better
-so for example if you're trying to drive
-a car you could say well a state where
-the car is driving
-quickly on the road is a high reward
-state
-whereas a state where the car is
-collided with another car is a low
-reward state
-but crucially the objective in
-reinforcement learning
-is not just to take actions that have
-high rewards right now
-but rather to take actions that will
-lead to higher awards later
-so if you're driving on the road a
-little too fast
-you might be getting a high reward but
-that might lead to an inevitable
-collision later that will lead to low
-reward
-so you have to consider the future
-rewards when choosing the current
-actions
-and that's really at the heart of the
-decision decision making problem that's
-at the heart of the reinforcement
-learning problems how do you
-choose the right actions now to receive
-high rewards
-later okay so
-together the state the action the reward
-and the transition probabilities define
-what we call
-a markov decision process it is a
-decision process
-on a markovian state
-Definitions
-so let's build up towards a full formal
-definition
-of markov decision processes we'll start
-with something called
-a markov chain the markov chain is named
-after
-andrei markov who was a mathematician
-who pioneered the study
-of stochastic processes including markov
-chains
-and the markov chain has a very simple
-definition it consists of just two
-things
-a set of states s and a transition
-function
-t the state space is simply
-a set which could be either discrete or
-continuous
-so you could have a discrete state in
-which case each state is a discrete
-element a finite size set
-or you could have a continuous state in
-which case perhaps your states
-correspond
-to real valued vectors in rn
-t is a transition operator it can also
+without having access to expert data.
+
+# Reward functions
+
+So, to do that, of course, we need to define
+what it is that we want the policy to do, and
+we define the objective by means of something
+called a reward function. So we could say, "Well,
+which action is better or worse if you're driving this car?
+If you don’t have any data, how can you say what is a
+good action and what is a bad action?"
+
+The reward function essentially tells you this.
+The reward function is a scalar-valued function of the state
+ and the action, although sometimes it can depend on only
+ the state. Most generally, it can depend on both the state
+ and the action. It tells us which states and actions are better.  
+
+For example, if you're trying to drive a car, you could say,
+ "Well, a state where the car is driving quickly on the road
+  is a high-reward state, whereas a state
+where the car is collided with another car is a low-reward state."
+
+But crucially, the objective in reinforcement learning
+ is not just to take actions that have high rewards right now,
+  but rather to take actions that will lead to higher rewards later.
+   So, if you're driving on the road a little too fast,
+   you might be getting a high reward,
+   but that might lead to an inevitable collision later
+   that will result in a low reward.
+   So, you have to consider the future rewards when choosing
+   the current actions. And that's really at the heart of the
+   decision-making problem. That's at the heart
+   of the reinforcement learning problem: How do you choose
+    the right actions now to receive high rewards later?  
+
+Together, the state, the action, the reward, and the transition
+probabilities define what we call a **Markov Decision Process**.
+It is a decision process on a Markovian state.
+
+# Markov Decision Process
+
+Let’s build up towards a full formal definition of
+Markov Decision Processes. We’ll start with something called a
+Markov Chain. The Markov chain is named after Andrei Markov,
+who was a mathematician that pioneered the study of stochastic
+processes, including Markov chains.  
+
+The Markov chain has a very simple definition: It consists of just
+two things:
+
+1. A set of states $S$, and
+2. A transition function $T$
+
+The state space is simply a set, which could be either
+discrete or continuous. So, you could have a discrete state,
+in which case each state is a discrete element in a finite-size set,
+or you could have a continuous state, in which case perhaps
+your states correspond to real-valued vectors in $\R^n$.
+
+$T$ is a transition operator. It can also
 be referred to as a transition
-probability or a dynamics function
-it specifies a conditional probability
-distribution
-so in a markov chain t denotes the
+probability or a dynamics function.
+It specifies a conditional probability
+distribution. In a Markov Chain, $T$ denotes the
 probability
-of the state at time t plus 1 condition
-on the state of time t and the reason
+of the state at time $t + 1$ condition
+on the state of time $t$. The reason
 that it's called an
 operator is because if we represent the
 probabilities of each state at time step
-t as a vector
-so let's say we have n states this
-becomes a vector with n elements
-and we can call it mu t comma i
-for the probability of the ith state the
-whole vector would be called
-mu t then we can
-write the uh the transition
-probabilities as a matrix
-where the ijth entry is the probability
-of going into state i
-if you're currently in the state j and
-if we do this
+$t$ as a vector
+(let's say we have $n$ states), this
+becomes a vector with $n$ elements
+and we can call it $\mu_{t,i}$, $i$
+for the probability of the $i$-th state. The
+whole vector would be called $\mu_t$.
+
+Then,  we can
+write the transition
+probabilities as a matrix,
+where the $ij$-th entry is the probability
+of going into state $i$
+if you're currently in the state $j$.
+If we do this,
 then we can express the vector of state
-probabilities at the next time step
-mu t plus one as simply a matrix vector
+probabilities at the next time step $\mu_{t+1}$
+as simply a matrix vector
 product
-between the matrix of probabilities t
-and the vector of state probabilities
-mu t this is simply
+between the matrix of probabilities $T$
+and the vector of state probabilities $\mu_t$.
+
+This is simply
 a way of writing the chain rule of
 probability
-with a little bit of linear algebra but
-here you can see that t
-acts on mu mu t as a linear operator
-which is why we call the transition
-operator it's an operator when applied
+with a little bit of linear algebra. But
+here you can see that $T$
+acts on $\mu_t$ as a linear operator
+which is why we call it the transition
+operator. It's an operator when applied
 to the current vector of state
 probabilities produces the next
-vector of state probabilities
-so here's the graphical model
-corresponding to the markov chain
+vector of state probabilities.
+
+So here's the graphical model
+corresponding to the Markov chain,
 and here is the edge denoting transition
-probabilities
-and of course the states in the markov
-chain denote uh
-the states in the markov chain satisfy
-the markov property which means that the
-state at time t
-plus one is conditionally independent of
-the state at time t minus 1
-given the state at time t
-all right now the markov chain by itself
-doesn't allow us to specify a decision
-making problem
-because there's no notion of actions
-so in order to go towards the notion of
-actions we need to
-turn the markov chain into a markov
-decision process
-and this was really a much more recent
-invention pioneer than the
-1950s so the markov decision process
+probabilities.
+Of course, the states in the Markov chain satisfy
+the markov property, which means that the
+state at time $t+1$ is conditionally independent of
+the state at time $t - 1$
+given the state at time $t$.
+
+All right, now the Markov chain by itself
+doesn't allow us to specify a decision-making problem,
+because there's no notion of actions.
+So, in order to go towards the notion of
+actions, we need to
+turn the Markov chain into a Markov
+Decision Process(MDP).This was really a much more recent
+invention pioneered in the the
+1950s.
+
+So the Markov Decision Process
 adds a few additional objects to the
-markov chain it adds an action space
-and a reward function so now we have a
+Markov Chain. It adds an action space
+and a reward function.
+
+Now we have a
 state space
 which is a discrete or continuous set of
-states we have an action space which is
-also a discrete or continuous set
-so the graphical model now contains both
+states. We have an action space which is
+also a discrete or continuous set.
+The graphical model now contains both
 states and actions
-and our transition probabilities are now
-conditioned on both states and actions
-so we have p of st plus one
-given st comma a t
-t is still called the transition
-operator but it can no longer be
-expressed as a matrix now it's actually
-a tensor because it has three dimensions
-the next state the current state and the
-current action
-but we can do the same kind of linear
-algebra trick so if we let mu
-t comma j denote the probability of
-being in state j at time t
-and we can have another vector that will
+, and our transition probabilities are now
+conditioned on both states and actions.
+
+So, we have $p(s_{t+1}|s_t, a_t)$.
+$T$ is still called the transition
+operator, but it can no longer be
+expressed as a matrix. Now, it's actually
+a tensor because it has three dimensions:
+the next state, the current state, and the
+current action.
+
+But we can do the same kind of linear
+algebra trick. So, if we let $\mu_{t, j}$ denote the probability of
+being in state $j$ at time $t$,
+we can have another vector that will
 denote the probability of taking some
-action
-and now we can write t as a tensor so t
-i j
-k is the probability of entering state i
-if you're in state j
-and take action k then you can write a
+action.
+Now we can write $T$ as a tensor, so $T_{i, j, k}$ is the probability of entering state $i$
+if you're in state $j$
+and take action $k$. Then you can write a
 linear form that describes the state
-probability
-mu t plus one comma i at the next time
+probability $\mu_{t + 1}$ at the next time
 step
 as a linear function of the current
-state probabilities the current action
-probabilities
-and the transition probabilities so that
-means that this transition operator
-although it is now a tensor is still a
+state probabilities, the current action
+probabilities,
+and the transition probabilities.
+
+So that
+means that this transition operator,
+although it is now a tensor, is still a
 linear operator
 that transforms current action and state
 probabilities
-into next time step state probabilities
-now we also have this reward function
+into next time step state probabilities.
+
+Now we also have this reward function,
 and the reward function
-is a mapping from the cartesian product
+is a mapping from the Cartesian product
 of the state in action space
-into real value numbers and this is what
+into real value numbers. This is what
 allows us to define an objective
-for reinforcement learning so we call
-r of st comma at the reward and
-our objective which i will define a few
-slides from now will be to maximize
-total rewards but before i do that i
-just want to extend this markov decision
+for reinforcement learning. So we call
+$r(s_t, a_t)$ the reward, and
+our objective, which I will define a few
+slides from now, will be to maximize
+total rewards.
+
+But before I do that, I
+just want to extend this Markov decision
 process definition
 to also define the partially observed
-markov decision process
-and this is what will allow us to bring
-in the notion of observations
-so a partially observed markov decision
+markov decision process.
+This is what will allow us to bring
+in the notion of observations.
+
+A partially observed Markov decision
 process further augments the definition
-with two additional objects an
-observation space o
+with two additional objects: an
+observation space $O$,
 and an emission probability or an
 observation probability
-e so again s is the state space
-a is an action space and o is now an
-observation space
-the graphical model now looks the same
-as it did for the mdp
+$\mathcal{E}$.
+
+So again, $S$ is the state space, $
+A$ is an action space, and $O$ is now an
+observation space.
+The graphical model now looks the same
+as it did for the MDP,
 with the addition that we have these
-observations o that depend on the state
-so we have a transition operator just
-like before and now we have an emission
-probability
-a p of ot given s t and
+observations $O$ that depend on the state.
+So we have a transition operator just
+like before, and now we have an emission
+probability, $p(o_t|s_t)$, and
 of course we also have the reward
-function
-the reward function is still mapping
+function.
+The reward function is still mapping
 from states and actions to real
-numbers so this the reward function
+numbers, so this, the reward function,
 convention is the final states not on
-observations
-but typically in a partially observed
-markov decision process or palmdp
+observations.
+But typically in a partially observed
+Markov decision process or POMDP,
 we would be making decisions based on
 observations without access to the true
-states
-The goal of reinforcement learning
-all right now that we've defined the
-mathematical objects of the markov chain
-the markov decision process and the
-partially observed markov decision
-process
-let's define an objective for
-reinforcement learning
-so in reinforcement learning we're going
+states.
+
+# The goal of reinforcement learning
+
+All right, now that we've defined the
+mathematical objects of the Markov chain
+the Markov decision process, and the
+partially observed Markov decision
+process, let's define an objective for
+reinforcement learning.  
+
+So, in reinforcement learning, we're going
 to be learning
-some object that defines a policy so for
-now let's just assume that we learn the
-policy directly
-and we'll see later on how there are
+some object that defines a policy. For
+now, let's just assume that we learn the
+policy directly.
+We'll see later on how there are
 some other methods that might represent
-the policy implicitly
-but for now we'll be explicitly learning
-pi theta
-a given s we'll come back to the partial
-observed case later for now let's just
-say that our policy is conditioned on s
-and theta corresponds to the parameters
-of the policy so if the policy is a
-deep neural net then theta denotes the
-parameters of that deep neural net
-the state goes into the policy the
-action comes out
+the policy implicitly.
+But for now, we'll be explicitly learning
+$\pi_\theta(a|s)$. We'll come back to the partial
+observed case later. For now, let's just
+say that our policy is conditioned on $s$
+and $\theta$ corresponds to the parameters
+of the policy. So, if the policy is a
+deep neural net, then $\theta$ denotes the
+parameters of that deep neural net.  
+
+The state goes into the policy, the
+action comes out,
 and then the state and action go into
-the transition probability basically the
-physics that govern the world
-which produces the next state right so
+the transition probability, basically the
+physics that govern the world,
+which produces the next state. Right, so
 that's the process that we are
-controlling
-now in this process we can write down a
+controlling.  
+
+Now, in this process, we can write down a
 probability distribution
-over trajectories so trajectories are
-sequences of states and actions
-s1a1 s2a2 etc etc until you get to state
-for now we will assume that our control
-problem is finite horizon which means
-that
-the decision making task lasts for a
-fixed number of time steps capital t
-and then ends we will extend this to the
+over trajectories. Trajectories are
+sequences of states and actions: $(s_1, a_1)$, $(s_2, a_2)$, etc., until you get to state $T$.
+For now, we will assume that our control
+problem is finite horizon, which means
+that the decision making task lasts for a
+fixed number of time steps, $T$
+and then ends. We will extend this to the
 infinite horizon setting
-shortly but for now we'll write down the
+shortly, but for now, we'll write down the
 finite horizon version
-because it's quite a bit easier to uh to
-start with
+because it's quite a bit easier to
+start with.  
+
 so if we write down the joint
 distribution of our states and actions
 and here i'm putting the subscript theta
@@ -510,7 +482,9 @@ augmented markov chain is simply the
 product of the transition operator in
 the mdp
 and the policy
-Finite horizon case: state-action marginal
+
+# Finite horizon case: state-action marginal
+
 so this can allow us to define the
 objective in a slightly different way
 that will be convenient to use in some
@@ -556,7 +530,8 @@ in a finite time markov chain can be
 obtained
 just by marginalizing out all the other
 time steps
-Infinite horizon case: stationary distribution
+
+# Infinite horizon case: stationary distribution
 but we can also use this objective to
 get the infinite horizon case
 so what if t equals infinity well
@@ -704,7 +679,7 @@ think about the derivation on this slide
 and if something is unclear
 or you have any questions please be sure
 to write them in the comments
-Expectations and stochastic systems
+# Expectations and stochastic systems
 all right now one uh last bit that i
 want to describe in this section which
 is
