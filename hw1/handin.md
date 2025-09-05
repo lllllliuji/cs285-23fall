@@ -1,5 +1,7 @@
-## 1. Analysis
-### Task 1.  Show that $\sum_{s_t}|p_{\pi_{\theta} }(s_t) - p_{\pi^\star}(s_t)|\le  2T\epsilon$.  
+# 1. Analysis
+
+## Task 1.  Show that $\sum_{s_t}|p_{\pi_{\theta} }(s_t) - p_{\pi^\star}(s_t)|\le  2T\epsilon$  
+
 1. 对$p_{\pi_{\theta} }(s_t)$做展开：
    $$
       \mathbb{p_{\pi_{\theta}}}(s_t) =  (1 - \epsilon) ^ {t} p_{\pi^{\star}}(s_t) + (1 - (1- \epsilon) ^ {t})p_{mistake}(s_t)
@@ -15,10 +17,12 @@
       &\le 2T\epsilon
    \end{align}
    $$
-   其中，（3）式由TV距离(total variation distance)的定义推导而来，其最大值为2，（4）式由union bound inequality推导而来。至少犯错一次的概率小于等于各个事件发生概率的和。
+   其中，（3）式由TV距离(total variation distance)的定义推导而来，其最大值为2，（4）式由union bound inequality推导而来。至少犯错一次的概率小于等于各个事件发生概率的和
 
 ### Task 2
-#### (a) 只考虑最终状态的奖励
+
+### (a) 只考虑最终状态的奖励
+
 对于所有$t < T,$$r(s_t)$ = 0,所以有
 $$\begin{align}
    J(\pi) &= \sum_{t = 1} ^{T}\mathbb{E}_{p_{\pi}(s_t)}r(s_t) \\
@@ -36,7 +40,9 @@ $$
    \end{align}
    $$
 由task1的结论可得，$J(\pi^{\star}) - J(\pi_{\theta}) \le 2R_{max}T\epsilon$，$J(\pi^*) - J(\pi_\theta) = \mathcal{O}(T \varepsilon)$原题得证。
-#### (b) 考虑任意奖励
+
+### (b) 考虑任意奖励
+
  可以根据(a)的结论轻易证明，
  $$  
    \begin{align}
@@ -45,4 +51,4 @@ $$
       &\le 2R_{max}T^{2}\epsilon
    \end{align}
    $$
-   $J(\pi^*) - J(\pi_\theta) = \mathcal{O}(T^2 \varepsilon)$原题得证。
+   $J(\pi^*) - J(\pi_\theta) = \mathcal{O}(T^2 \varepsilon)$原题得证。  
