@@ -19,7 +19,7 @@
    $$
    其中，（3）式由TV距离(total variation distance)的定义推导而来，其最大值为2，（4）式由union bound inequality推导而来。至少犯错一次的概率小于等于各个事件发生概率的和
 
-### Task 2
+## Task 2
 
 ### (a) 只考虑最终状态的奖励
 
